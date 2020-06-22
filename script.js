@@ -3,13 +3,23 @@ const nickFromUrl = (url) => {
   let urlSplit = url.split('=');
   let userName = urlSplit[1];
   if (userName == undefined) {
-    userName = '6thSence';
+    userName = 'akartynnik';
   }
   return userName;
 }
 
 const nick = nickFromUrl(url);
 const body = document.body;
+
+const content = document.querySelector('.content');
+const preloader = document.querySelector('.loadingio-spinner-spinner-zsfrfdav2ln');
+
+function preloaderHide () {
+	preloader.style.display = 'none';
+  content.style.display = 'block';
+}
+
+setTimeout(preloaderHide, 1000);
 
 fetch(`https://api.github.com/users/${nick}`)
   .then(res => res.json())
@@ -18,7 +28,7 @@ fetch(`https://api.github.com/users/${nick}`)
       const avatarAdd = () => {
         const img = document.createElement('img');
         img.src = json.avatar_url;
-        body.append(img);
+        content.append(img);
       }
 
       const nameAdd = () => {
@@ -26,25 +36,25 @@ fetch(`https://api.github.com/users/${nick}`)
         if (name === null) {
           const nickName = json.login;
           h1.innerHTML = nickName;
-          body.append(h1);
+          content.append(h1);
         } else {
           const name = json.name;
           h1.innerHTML = name;
-          body.append(h1);
+          content.append(h1);
         }
       }
 
       const  bioAdd = () => {
         const p = document.createElement('p');
         p.innerHTML = json.bio;
-        body.append(p);
+        content.append(p);
       }
 
       const linkAdd = () => {
         const link = document.createElement('a');
         link.href = json.html_url;
         link.innerHTML = 'Link';
-        body.append(link);
+        content.append(link);
       }
 
       nameAdd();
@@ -52,7 +62,7 @@ fetch(`https://api.github.com/users/${nick}`)
       bioAdd();
       linkAdd();
     } else {
-      alert("Информация о пользователе не доступнаs");
+      alert("Информация о пользователе не доступна");
     }
   })
-  .catch(err => console.log(err));
+  .catch(err => alert(err));
